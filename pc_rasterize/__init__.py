@@ -458,8 +458,8 @@ def _bin_files_to_tiles(paths, tiles, dest_crs):
     tile_bboxes = gpd.GeoSeries(tile_geoms, crs=dest_crs).to_frame("geometry")
     tile_bboxes["tile_idx"] = tile_2d_indices
 
+    src_bboxes = gpd.GeoSeries([i.bbox for i in infos], crs=src_crs)
     if src_crs != dest_crs:
-        src_bboxes = gpd.GeoSeries([i.bbox for i in infos], crs=src_crs)
         src_bboxes_warped_to_dest = _warp_bboxes_conservative(
             src_bboxes, dest_crs
         )
