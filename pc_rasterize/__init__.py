@@ -181,9 +181,15 @@ def _warp_bboxes_conservative(bboxes, dest_crs, p_detail=None, p_buffer=None):
 
 
 def _flat_index(x, y, affine, shape):
+    *_, nr, nc = shape
     col, row = (~affine) * (x, y)
     row = np.floor(row).astype(int)
     col = np.floor(col).astype(int)
+    # TODO: this is a hack to prevent errors but causes double counting of
+    # points that fall on the bounding box edges. A more involved fix needs to
+    # be implemented.
+    row[row == nr] = nr - 1
+    col[col == nc] = nc - 1
     return np.ravel_multi_index((row, col), shape)
 
 
